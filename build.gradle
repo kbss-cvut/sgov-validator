@@ -8,7 +8,7 @@ plugins {
 }
 
 quality {
-    checkstyleVersion = '8.32'
+    checkstyleVersion = '10.23.0'
     checkstyle = true
     spotbugs = false
     pmd = false

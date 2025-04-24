@@ -1,10 +1,5 @@
 package com.github.sgov.server;
 
-import java.io.IOException;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Set;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
@@ -19,6 +14,16 @@ import org.topbraid.shacl.util.SHACLPreferences;
 import org.topbraid.shacl.validation.ValidationReport;
 import org.topbraid.shacl.vocabulary.SH;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class RulesTest {
 
     @BeforeEach
@@ -29,31 +34,39 @@ public class RulesTest {
     @ParameterizedTest(name = "Rule {0} for {1} (should be {2})")
     @CsvFileSource(resources = "/test-cases.csv", numLinesToSkip = 1)
     public void testShaclRule(String rule, String output, String outcome) throws IOException {
-        testModel(Collections.singleton(getClass().getResource("/rules/" + rule)), output,
-            Outcome.valueOf(outcome));
+        testModel(loadRuleset(Set.of(getClass().getResource("/rules/" + rule))), output,
+                  Outcome.valueOf(outcome));
     }
 
-    private void testModel(Set<URL> ruleSet, String data, Outcome outcome) throws IOException {
+    private static Model loadRuleset(Set<URL> ruleSet) throws IOException {
+        final Model shapesModel = JenaUtil.createMemoryModel();
+        for (URL r : ruleSet) {
+            shapesModel.read(r.openStream(), null, FileUtils.langTurtle);
+        }
+        return shapesModel;
+    }
+
+    private void testModel(Model shapesModel, String data, Outcome outcome) throws IOException {
         final Model dataModel =
-            JenaUtil.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF, null);
+                JenaUtil.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF, null);
 
         OntDocumentManager.getInstance().setProcessImports(false);
         dataModel.read(RulesTest.class.getResourceAsStream("/" + data), "urn:dummy",
-            FileUtils.langTurtle);
+                       FileUtils.langTurtle);
 
         final Validator validator = new Validator();
-        final ValidationReport r = validator.validate(dataModel, ruleSet);
+        final ValidationReport r = validator.validate(dataModel, shapesModel);
 
         r.results().forEach(result -> System.out.println((MessageFormat
-            .format("[{0}] Node {1} failing for value {2} with message: {3} ",
-                result.getSeverity().getLocalName(), result.getFocusNode(), result.getValue(),
-                result.getMessage()))));
+                .format("[{0}] Node {1} failing for value {2} with message: {3} ",
+                        result.getSeverity().getLocalName(), result.getFocusNode(), result.getValue(),
+                        result.getMessage()))));
 
         if (r.conforms()) {
             Assertions.assertEquals(outcome, Outcome.Pass);
         } else {
             Assertions.assertTrue(
-                r.results().stream().anyMatch(a -> a.getSeverity().equals(outcome.url)));
+                    r.results().stream().anyMatch(a -> a.getSeverity().equals(outcome.url)));
         }
     }
 
@@ -64,5 +77,20 @@ public class RulesTest {
         Outcome(Resource url) {
             this.url = url;
         }
+    }
+
+    @ParameterizedTest(name = "Rule {0} for {1} (should be {2})")
+    @CsvFileSource(resources = "/localized-test-cases.csv", numLinesToSkip = 1)
+    public void testLangShaclRule(String rule, String output, String outcome) throws IOException {
+        String content;
+        try (final BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream("/rule-templates/" + rule)))) {
+            content = reader.lines().collect(Collectors.joining("\n"));
+        }
+        content = content.replace("${lang}", "cs");
+        final Model shapesModel = JenaUtil.createMemoryModel();
+        shapesModel.read(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)), null,
+                         FileUtils.langTurtle);
+        testModel(shapesModel, output, Outcome.valueOf(outcome));
     }
 }

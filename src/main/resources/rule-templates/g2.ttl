@@ -9,7 +9,7 @@ j-sgov-obecný:g2
                            "The term does not have a preferred label in Czech."@en ;
     sh:targetClass         skos:Concept ;
     sh:path                skos:prefLabel ;
-    sh:qualifiedValueShape [ sh:languageIn ( "cs" ) ] ;
+    sh:qualifiedValueShape [ sh:languageIn ( "${lang}" ) ] ;
     sh:qualifiedMinCount   1 ;
     sh:minLength           1
 .

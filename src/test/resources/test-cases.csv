@@ -1,12 +1,7 @@
 rule   ,output                                                      ,valid
 g1.ttl ,rule-test-cases/concept-with-multiple-czech-pref-labels.ttl ,Violation
 g1.ttl ,rule-test-cases/concept-with-czech-label-and-definition.ttl ,Pass
-g2.ttl ,rule-test-cases/concept-empty.ttl                           ,Violation
-g2.ttl ,rule-test-cases/concept-with-czech-label-and-definition.ttl ,Pass
 g3.ttl ,rule-test-cases/concept-with-multiple-czech-definitions.ttl ,Violation
-g4.ttl ,rule-test-cases/concept-empty.ttl                           ,Warning
-g4.ttl ,rule-test-cases/concept-with-czech-label-and-definition.ttl ,Pass
-g4.ttl ,rule-test-cases/concept-with-empty-definition.ttl           ,Warning
 g5.ttl ,rule-test-cases/concept-with-too-long-label.ttl             ,Info
 g5.ttl ,rule-test-cases/concept-with-too-short-label.ttl            ,Info
 g5.ttl ,rule-test-cases/concept-with-correct-label.ttl              ,Pass
