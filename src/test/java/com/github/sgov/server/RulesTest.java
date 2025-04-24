@@ -46,7 +46,7 @@ public class RulesTest {
         return shapesModel;
     }
 
-    private void testModel(Model shapesModel, String data, Outcome outcome) throws IOException {
+    private void testModel(Model shapesModel, String data, Outcome outcome) {
         final Model dataModel =
                 JenaUtil.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF, null);
 
@@ -72,7 +72,7 @@ public class RulesTest {
 
     enum Outcome {
         Info(SH.Info), Warning(SH.Warning), Violation(SH.Violation), Pass(null);
-        Resource url;
+        final Resource url;
 
         Outcome(Resource url) {
             this.url = url;
