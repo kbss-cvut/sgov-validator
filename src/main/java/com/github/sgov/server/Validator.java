@@ -29,14 +29,14 @@ public class Validator {
     public Validator() {
 
         // inference rules
-        this.shapesModel = ModelFactory.createDefaultModel();
+        shapesModel = ModelFactory.createDefaultModel();
         shapesModel.read(
                 com.github.sgov.server.Validator.class.getResourceAsStream("/inference-rules.ttl"),
                 null,
                 FileUtils.langTurtle);
 
         // mapping Z-SGoV to UFO
-        this.mappingModel = ModelFactory.createDefaultModel();
+        mappingModel = ModelFactory.createDefaultModel();
         mappingModel.read(
                 com.github.sgov.server.Validator.class.getResourceAsStream("/z-sgov-mapping.ttl"),
                 null,
@@ -64,11 +64,11 @@ public class Validator {
      * Validates the given model with vocabulary data (glossaries, models) against the given shapes model containing
      * validation rules and the default inference rules provided by this validator.
      *
-     * @param dataModel   Model with data to validate
-     * @param shapesModel Model with validation rules
-     * @return Validation report
+     * @param dataModel   model with data to validate
+     * @param shapesModel model with validation rules
+     * @return validation report
      */
-    public ValidationReport validate(Model dataModel, Model shapesModel) {
+    public ValidationReport validate(final Model dataModel, final Model shapesModel) {
         shapesModel.add(this.shapesModel);
 
         dataModel.add(mappingModel);
