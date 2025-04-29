@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("MissingJavadocType")
 public class Validator {
@@ -51,12 +50,8 @@ public class Validator {
      * @return Validation report
      */
     public ValidationReport validate(Model dataModel, String language) {
-        final Model shapesModel = getRulesModel(
-                Stream.concat(ValidationRules.glossaryRules(language).stream(),
-                              Stream.concat(ValidationRules.modelRules(language).stream(),
-                                            ValidationRules.vocabularyRules(language).stream()))
-                      .map(Rule::content)
-                      .collect(Collectors.toSet()));
+        final Model shapesModel = getRulesModel(ValidationRules.rules(language).stream().map(Rule::content)
+                                                               .collect(Collectors.toSet()));
         final ValidationReport result = validate(dataModel, shapesModel);
         shapesModel.close();
         return result;

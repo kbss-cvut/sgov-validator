@@ -94,4 +94,17 @@ public final class ValidationRules {
         Objects.requireNonNull(language);
         return rulesAndTemplates(VOCABULARY_RULES, VOCABULARY_RULE_TEMPLATES, language);
     }
+
+    /**
+     * Gets all (glossary, model, vocabulary) validation rules for the specified language.
+     *
+     * @param language Language of data to validate
+     * @return List of rules
+     */
+    public static List<Rule> rules(String language) {
+        return Stream.concat(glossaryRules(language).stream(),
+                             Stream.concat(modelRules(language).stream(),
+                                           vocabularyRules(language).stream()))
+                     .collect(Collectors.toList());
+    }
 }
