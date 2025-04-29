@@ -42,7 +42,7 @@ public final class ValidationRules {
             if (stream == null) {
                 break;
             }
-            result.add(loadFile(fileName, stream));
+            result.add(loadFile(fileName.substring(0, fileName.indexOf('.')), stream));
             i++;
         }
         return result;
