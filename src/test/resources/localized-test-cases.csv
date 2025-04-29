@@ -1,0 +1,6 @@
+rule   ,output                                                      ,valid
+g2.ttl ,rule-test-cases/concept-empty.ttl                           ,Violation
+g2.ttl ,rule-test-cases/concept-with-czech-label-and-definition.ttl ,Pass
+g4.ttl ,rule-test-cases/concept-empty.ttl                           ,Warning
+g4.ttl ,rule-test-cases/concept-with-czech-label-and-definition.ttl ,Pass
+g4.ttl ,rule-test-cases/concept-with-empty-definition.ttl           ,Warning

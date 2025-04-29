@@ -9,6 +9,6 @@ j-sgov-obecný:g4
                            "The term does not have a definition in Czech."@en ;
     sh:targetClass         skos:Concept ;
     sh:path                skos:definition ;
-    sh:qualifiedValueShape [ sh:languageIn ( "cs" ) ; sh:minLength 1] ;
+    sh:qualifiedValueShape [ sh:languageIn ( "${lang}" ) ; sh:minLength 1] ;
     sh:qualifiedMinCount   1
 .
