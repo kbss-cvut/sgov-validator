@@ -57,7 +57,9 @@ public class Validator {
                                             ValidationRules.vocabularyRules(language).stream()))
                       .map(Rule::content)
                       .collect(Collectors.toSet()));
-        return validate(dataModel, shapesModel);
+        final ValidationReport result = validate(dataModel, shapesModel);
+        shapesModel.close();
+        return result;
     }
 
     /**
