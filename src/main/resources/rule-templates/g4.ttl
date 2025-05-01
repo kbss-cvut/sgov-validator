@@ -5,8 +5,8 @@
 j-sgov-obecný:g4
     a                      sh:NodeShape ;
     sh:severity            sh:Warning ;
-    sh:message             "Pojem nemá definici v češtině."@cs,
-                           "The term does not have a definition in Czech."@en ;
+    sh:message             "Pojem nemá definici v konfigurovaném jazyce."@cs,
+                           "The term does not have a definition in the configured language."@en ;
     sh:targetClass         skos:Concept ;
     sh:path                skos:definition ;
     sh:qualifiedValueShape [ sh:languageIn ( "${lang}" ) ; sh:minLength 1] ;

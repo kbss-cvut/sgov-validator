@@ -5,8 +5,8 @@
 j-sgov-obecný:g2
     a                      sh:NodeShape ;
     sh:severity            sh:Violation ;
-    sh:message             "Pojem nemá název v češtině."@cs,
-                           "The term does not have a preferred label in Czech."@en ;
+    sh:message             "Pojem nemá název v konfigurovaném jazyce."@cs,
+                           "The term does not have a preferred label in the configured language."@en ;
     sh:targetClass         skos:Concept ;
     sh:path                skos:prefLabel ;
     sh:qualifiedValueShape [ sh:languageIn ( "${lang}" ) ] ;
