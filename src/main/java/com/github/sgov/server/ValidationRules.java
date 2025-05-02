@@ -34,16 +34,15 @@ public final class ValidationRules {
     }
 
     private static List<Rule> loadResources(String dir, String prefix) {
-        int i = 1;
         final List<Rule> result = new ArrayList<>();
-        while (i < Short.MAX_VALUE) {
+        // Max rule count is 20
+        for (int i = 1; i < 20; i++) {
             final String fileName = prefix + i + ".ttl";
             final InputStream stream = ValidationRules.class.getResourceAsStream(dir + "/" + fileName);
             if (stream == null) {
-                break;
+                continue;
             }
             result.add(loadFile(fileName.substring(0, fileName.indexOf('.')), stream));
-            i++;
         }
         return result;
     }
