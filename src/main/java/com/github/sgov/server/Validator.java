@@ -2,44 +2,52 @@ package com.github.sgov.server;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
+import org.apache.jena.shacl.ShaclValidator;
+import org.apache.jena.shacl.Shapes;
+import org.apache.jena.shacl.ValidationReport;
 import org.apache.jena.util.FileUtils;
-import org.topbraid.jenax.progress.NullProgressMonitor;
-import org.topbraid.jenax.util.JenaUtil;
-import org.topbraid.shacl.rules.RuleUtil;
-import org.topbraid.shacl.validation.ResourceValidationReport;
-import org.topbraid.shacl.validation.ValidationReport;
-import org.topbraid.shacl.validation.ValidationUtil;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("MissingJavadocType")
 public class Validator {
 
-    private final Model shapesModel;
+    private final List<org.apache.jena.reasoner.rulesys.Rule> rules;
     private final Model mappingModel;
 
     /**
      * Validator constructor.
      */
     public Validator() {
-
-        // inference rules
-        shapesModel = ModelFactory.createDefaultModel();
-        shapesModel.read(
-                com.github.sgov.server.Validator.class.getResourceAsStream("/inference-rules.ttl"),
-                null,
-                FileUtils.langTurtle);
-
+        final InputStream is = Validator.class.getClassLoader().getResourceAsStream("jena-inference-rules.rules");
+        String rulesStr = new BufferedReader(new InputStreamReader(is))
+                .lines().collect(Collectors.joining("\n"));
+        this.rules = org.apache.jena.reasoner.rulesys.Rule.parseRules(rulesStr);
         // mapping Z-SGoV to UFO
         mappingModel = ModelFactory.createDefaultModel();
         mappingModel.read(
                 com.github.sgov.server.Validator.class.getResourceAsStream("/z-sgov-mapping.ttl"),
                 null,
                 FileUtils.langTurtle);
+    }
+
+    private String readRules() {
+        try (final InputStream is = Validator.class.getClassLoader()
+                                                   .getResourceAsStream("jena-inference-rules.rules")) {
+            return new BufferedReader(new InputStreamReader(is))
+                    .lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read inference rules.", e);
+        }
     }
 
     /**
@@ -66,21 +74,17 @@ public class Validator {
      * @return validation report
      */
     public ValidationReport validate(final Model dataModel, final Model shapesModel) {
-        shapesModel.add(this.shapesModel);
+        final Shapes shapes = Shapes.parse(shapesModel);
 
         dataModel.add(mappingModel);
 
-        final Model inferredModel = RuleUtil.executeRules(dataModel, shapesModel, null,
-                                                          new NullProgressMonitor());
-        dataModel.add(inferredModel);
+        final Model inferredModel = ModelFactory.createInfModel(new GenericRuleReasoner(rules), dataModel);
 
-        final Resource report = ValidationUtil.validateModel(dataModel, shapesModel, true);
-
-        return new ResourceValidationReport(report);
+        return ShaclValidator.get().validate(shapes, inferredModel.getGraph());
     }
 
     private static Model getRulesModel(final Collection<String> rules) {
-        final Model shapesModel = JenaUtil.createMemoryModel();
+        final Model shapesModel = ModelFactory.createDefaultModel();
         for (String r : rules) {
             shapesModel.read(new ByteArrayInputStream(r.getBytes(StandardCharsets.UTF_8)), null, FileUtils.langTurtle);
         }

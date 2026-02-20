@@ -1,16 +1,16 @@
 package com.github.sgov.server;
 
 import lombok.Getter;
-import org.topbraid.shacl.vocabulary.SH;
+import org.apache.jena.shacl.vocabulary.SHACL;
 
 /**
  * SHACL severity.
  */
 @Getter
 public enum ShaclSeverity {
-    VIOLATION(SH.Violation.getURI()),
-    WARNING(SH.Warning.getURI()),
-    INFO(SH.Info.getURI());
+    VIOLATION(SHACL.Violation.getURI()),
+    WARNING(SHACL.Warning.getURI()),
+    INFO(SHACL.Info.getURI());
 
     private final String uri;
 
