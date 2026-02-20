@@ -28,10 +28,7 @@ public class Validator {
      * Validator constructor.
      */
     public Validator() {
-        final InputStream is = Validator.class.getClassLoader().getResourceAsStream("jena-inference-rules.rules");
-        String rulesStr = new BufferedReader(new InputStreamReader(is))
-                .lines().collect(Collectors.joining("\n"));
-        this.rules = org.apache.jena.reasoner.rulesys.Rule.parseRules(rulesStr);
+        this.rules = org.apache.jena.reasoner.rulesys.Rule.parseRules(readRules());
         // mapping Z-SGoV to UFO
         mappingModel = ModelFactory.createDefaultModel();
         mappingModel.read(
@@ -40,9 +37,10 @@ public class Validator {
                 FileUtils.langTurtle);
     }
 
-    private String readRules() {
+    private static String readRules() {
         try (final InputStream is = Validator.class.getClassLoader()
                                                    .getResourceAsStream("jena-inference-rules.rules")) {
+            assert is != null;
             return new BufferedReader(new InputStreamReader(is))
                     .lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
