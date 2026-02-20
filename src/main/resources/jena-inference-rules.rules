@@ -1,0 +1,38 @@
+@prefix rdf:           <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:            <http://www.w3.org/ns/shacl#> .
+@prefix xsd:           <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:          <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tc1:           <https://slovník.gov.cz/jazyk/obecný/test-case/1/> .
+@prefix z-sgov-pojem:  <https://slovník.gov.cz/základní/pojem/> .
+@prefix j-sgov-obecný: <https://slovník.gov.cz/jazyk/obecný/> .
+@prefix owl:           <http://www.w3.org/2002/07/owl#> .
+@prefix skos:          <http://www.w3.org/2004/02/skos/core#> .
+
+[equivalenceHierarchy: (?a owl:equivalentClass ?b) -> (?a rdfs:subClassOf ?b), (?b rdfs:subClassOf ?a)]
+[typObjektuSubClass:   (?a rdf:type z-sgov-pojem:objekt) -> (?a rdfs:subClassOf z-sgov-pojem:objekt)]
+[typVlastnostiSubClass: (?a rdf:type z-sgov-pojem:vlastnost) -> (?a rdfs:subClassOf z-sgov-pojem:vlastnost)]
+[typVztahuSubClass:     (?a rdf:type z-sgov-pojem:vztah) -> (?a rdfs:subClassOf z-sgov-pojem:vztah)]
+[typUdálostiSubClass:   (?a rdf:type z-sgov-pojem:událost) -> (?a rdfs:subClassOf z-sgov-pojem:událost)]
+
+
+[obsahovyTypZOntologickeho1: (?a rdf:type z-sgov-pojem:druh) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho2: (?a rdf:type z-sgov-pojem:role) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho3: (?a rdf:type z-sgov-pojem:mixinrolí) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho4: (?a rdf:type z-sgov-pojem:fáze) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho5: (?a rdf:type z-sgov-pojem:mixinfází) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho6: (?a rdf:type z-sgov-pojem:poddruh) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho7: (?a rdf:type z-sgov-pojem:kategorie) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho8: (?a rdf:type z-sgov-pojem:mixin) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho9: (?a rdf:type z-sgov-pojem:typ-objektu) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho10: (?a rdf:type z-sgov-pojem:typ-vlastnosti) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[obsahovyTypZOntologickeho11: (?a rdf:type z-sgov-pojem:typ-vztahu) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+
+[broaderZeSubClassOff: (?a rdfs:subClassOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
+[broaderZeSubPropertyOff: (?a rdfs:subPropertyOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
+
+[typZPodtridy1: (?a rdfs:subClassOf z-sgov-pojem:proměnný-prvek) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[typZPodtridy2: (?a rdfs:subClassOf z-sgov-pojem:neměnný-prvek) -> (?a rdf:type z-sgov-pojem:typ-neměnného-prvku)]
+[typZPodtridy3: (?a rdfs:subClassOf z-sgov-pojem:objekt) -> (?a rdf:type z-sgov-pojem:typ-objektu)]
+[typZPodtridy4: (?a rdfs:subClassOf z-sgov-pojem:událost) -> (?a rdf:type z-sgov-pojem:typ-události)]
+[typZPodtridy5: (?a rdfs:subClassOf z-sgov-pojem:vlastnost) -> (?a rdf:type z-sgov-pojem:typ-vlastnosti)]
+[typZPodtridy6: (?a rdfs:subClassOf z-sgov-pojem:vztah) -> (?a rdf:type z-sgov-pojem:typ-vztahu)]

@@ -1,17 +1,18 @@
 package com.github.sgov.server;
 
+import org.apache.jena.shacl.validation.ReportEntry;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
-import org.topbraid.shacl.validation.ValidationResult;
 
 @SuppressWarnings("MissingJavadocType")
-public class ValidationResultSeverityComparator implements Comparator<ValidationResult> {
+public class ValidationResultSeverityComparator implements Comparator<ReportEntry> {
 
-    private static ShaclSeverity of(final ValidationResult result) {
+    private static ShaclSeverity of(final ReportEntry result) {
         final Optional<ShaclSeverity> severity
             = Arrays.stream(ShaclSeverity.values()).filter(s ->
-            s.getUri().equals(result.getSeverity().getURI())
+            s.getUri().equals(result.severity().level().getURI())
         ).findFirst();
         return severity.orElse(null);
     }
@@ -23,7 +24,7 @@ public class ValidationResultSeverityComparator implements Comparator<Validation
      * @param res2 second validation result
      * @return negative, 0, positive as per comparison contract
      */
-    public int compare(ValidationResult res1, ValidationResult res2) {
+    public int compare(ReportEntry res1, ReportEntry res2) {
         return ValidationResultSeverityComparator.of(res1).compareTo(
             ValidationResultSeverityComparator.of(res2)
         );
