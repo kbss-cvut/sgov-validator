@@ -26,8 +26,8 @@ public class RulesTest {
 
     @ParameterizedTest(name = "Rule {0} for {1} (should be {2})")
     @CsvFileSource(resources = "/test-cases.csv", numLinesToSkip = 1)
-    public void testShaclRule(String rule, String output, String outcome) throws IOException {
-        testModel(loadRuleset(Set.of(getClass().getResource("/rules/" + rule))), output,
+    public void testShaclRule(String rule, String input, String outcome) throws IOException {
+        testModel(loadRuleset(Set.of(getClass().getResource("/rules/" + rule))), input,
                   Outcome.valueOf(outcome));
     }
 
