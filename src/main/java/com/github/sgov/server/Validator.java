@@ -38,7 +38,7 @@ public class Validator {
     }
 
     private static String readRules() {
-        try (final InputStream is = Validator.class.getClassLoader()
+        try (InputStream is = Validator.class.getClassLoader()
                                                    .getResourceAsStream("jena-inference-rules.rules")) {
             assert is != null;
             return new BufferedReader(new InputStreamReader(is))
@@ -76,7 +76,8 @@ public class Validator {
 
         dataModel.add(mappingModel);
 
-        final Model inferredModel = ModelFactory.createInfModel(new GenericRuleReasoner(rules), dataModel);
+        final GenericRuleReasoner reasoner = new GenericRuleReasoner(rules);
+        final Model inferredModel = ModelFactory.createInfModel(reasoner, dataModel);
 
         return ShaclValidator.get().validate(shapes, inferredModel.getGraph());
     }
