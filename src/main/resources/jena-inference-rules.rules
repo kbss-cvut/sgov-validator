@@ -8,6 +8,8 @@
 @prefix owl:           <http://www.w3.org/2002/07/owl#> .
 @prefix skos:          <http://www.w3.org/2004/02/skos/core#> .
 
+@include <RDFS>.
+
 [equivalenceHierarchy: (?a owl:equivalentClass ?b) -> (?a rdfs:subClassOf ?b), (?b rdfs:subClassOf ?a)]
 [typObjektuSubClass:   (?a rdf:type z-sgov-pojem:objekt) -> (?a rdfs:subClassOf z-sgov-pojem:objekt)]
 [typVlastnostiSubClass: (?a rdf:type z-sgov-pojem:vlastnost) -> (?a rdfs:subClassOf z-sgov-pojem:vlastnost)]
@@ -30,9 +32,9 @@
 [broaderZeSubClassOff: (?a rdfs:subClassOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
 [broaderZeSubPropertyOff: (?a rdfs:subPropertyOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
 
-[typZPodtridy1: (?a rdfs:subClassOf z-sgov-pojem:proměnný-prvek) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
-[typZPodtridy2: (?a rdfs:subClassOf z-sgov-pojem:neměnný-prvek) -> (?a rdf:type z-sgov-pojem:typ-neměnného-prvku)]
-[typZPodtridy3: (?a rdfs:subClassOf z-sgov-pojem:objekt) -> (?a rdf:type z-sgov-pojem:typ-objektu)]
-[typZPodtridy4: (?a rdfs:subClassOf z-sgov-pojem:událost) -> (?a rdf:type z-sgov-pojem:typ-události)]
-[typZPodtridy5: (?a rdfs:subClassOf z-sgov-pojem:vlastnost) -> (?a rdf:type z-sgov-pojem:typ-vlastnosti)]
-[typZPodtridy6: (?a rdfs:subClassOf z-sgov-pojem:vztah) -> (?a rdf:type z-sgov-pojem:typ-vztahu)]
+[typZPodtridy1: (?a rdfs:subClassOf z-sgov-pojem:proměnný-prvek) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
+[typZPodtridy2: (?a rdfs:subClassOf z-sgov-pojem:neměnný-prvek) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-neměnného-prvku)]
+[typZPodtridy3: (?a rdfs:subClassOf z-sgov-pojem:objekt) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-objektu)]
+[typZPodtridy4: (?a rdfs:subClassOf z-sgov-pojem:událost) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-události)]
+[typZPodtridy5: (?a rdfs:subClassOf z-sgov-pojem:vlastnost) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-vlastnosti)]
+[typZPodtridy6: (?a rdfs:subClassOf z-sgov-pojem:vztah) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-vztahu)]
