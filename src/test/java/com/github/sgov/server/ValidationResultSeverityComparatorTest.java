@@ -10,12 +10,14 @@ public class ValidationResultSeverityComparatorTest {
     private ReportEntry mockWithSeverity(final String severityUri) {
         final ReportEntry result1 = ReportEntry.create();
         result1.severity(ResourceFactory.createResource(severityUri).asNode());
+        result1.source(ResourceFactory.createResource().asNode());
         return result1;
     }
 
     private void testEquals(final String severityUri1, final String severityUri2) {
         ReportEntry result1 = mockWithSeverity(severityUri1);
         ReportEntry result2 = mockWithSeverity(severityUri2);
+        result2.source(result1.source());
         Assertions.assertEquals( 0, new ValidationResultSeverityComparator().compare(result1,result2) );
     }
 

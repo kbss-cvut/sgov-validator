@@ -1,7 +1,10 @@
 package com.github.sgov.server;
 
+import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.reasoner.Derivation;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.shacl.ShaclValidator;
 import org.apache.jena.shacl.Shapes;
@@ -10,11 +13,14 @@ import org.apache.jena.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +45,7 @@ public class Validator {
 
     private static String readRules() {
         try (InputStream is = Validator.class.getClassLoader()
-                                                   .getResourceAsStream("jena-inference-rules.rules")) {
+                                             .getResourceAsStream("jena-inference-rules.rules")) {
             assert is != null;
             return new BufferedReader(new InputStreamReader(is))
                     .lines().collect(Collectors.joining("\n"));
@@ -79,7 +85,35 @@ public class Validator {
         final GenericRuleReasoner reasoner = new GenericRuleReasoner(rules);
         final Model inferredModel = ModelFactory.createInfModel(reasoner, dataModel);
 
-        return ShaclValidator.get().validate(shapes, inferredModel.getGraph());
+        final ValidationReport report = ShaclValidator.get().validate(shapes, inferredModel.getGraph());
+        inferredModel.close();
+        return report;
+    }
+
+    /**
+     * Gets the derivation of the specified statement in the specified data model, under the inference rules applied by
+     * this validator.
+     *
+     * @param dataModel Model with base data
+     * @param statement Statement whose derivation trace to get
+     * @return String representation of the derivation trace
+     */
+    public String getDerivation(final Model dataModel, final Statement statement) {
+        dataModel.add(mappingModel);
+
+        final GenericRuleReasoner reasoner = new GenericRuleReasoner(rules);
+        reasoner.setDerivationLogging(true);
+        final InfModel inferredModel = ModelFactory.createInfModel(reasoner, dataModel);
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final PrintWriter out = new PrintWriter(bos);
+        final Iterator<Derivation> it = inferredModel.getDerivation(statement);
+        while (it.hasNext()) {
+            final Derivation d = it.next();
+            d.printTrace(out, true);
+        }
+        out.flush();
+        inferredModel.close();
+        return bos.toString(StandardCharsets.UTF_8);
     }
 
     private static Model getRulesModel(final Collection<String> rules) {
