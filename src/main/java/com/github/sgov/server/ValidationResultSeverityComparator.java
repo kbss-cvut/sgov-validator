@@ -11,8 +11,9 @@ public class ValidationResultSeverityComparator implements Comparator<ReportEntr
 
     private static ShaclSeverity of(final ReportEntry result) {
         final Optional<ShaclSeverity> severity
-            = Arrays.stream(ShaclSeverity.values()).filter(s ->
-            s.getUri().equals(result.severity().level().getURI())
+                = Arrays.stream(ShaclSeverity.values()).filter(s ->
+                                                                       s.getUri()
+                                                                        .equals(result.severity().level().getURI())
         ).findFirst();
         return severity.orElse(null);
     }
@@ -25,8 +26,15 @@ public class ValidationResultSeverityComparator implements Comparator<ReportEntr
      * @return negative, 0, positive as per comparison contract
      */
     public int compare(ReportEntry res1, ReportEntry res2) {
-        return ValidationResultSeverityComparator.of(res1).compareTo(
-            ValidationResultSeverityComparator.of(res2)
+        int result = ValidationResultSeverityComparator.of(res1).compareTo(
+                ValidationResultSeverityComparator.of(res2)
         );
+        if (result == 0 && res1.focusNode() != null && res2.focusNode() != null) {
+            result = res1.focusNode().toString().compareTo(res2.focusNode().toString());
+        }
+        if (result == 0) {
+            result = res1.source().toString().compareTo(res2.source().toString());
+        }
+        return result;
     }
 }
