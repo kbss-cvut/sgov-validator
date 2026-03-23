@@ -96,8 +96,9 @@
 [obsahovyTypZOntologickeho10: (?a rdf:type z-sgov-pojem:typ-vlastnosti) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
 [obsahovyTypZOntologickeho11: (?a rdf:type z-sgov-pojem:typ-vztahu) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
 
-[broaderZeSubClassOff: (?a rdfs:subClassOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
-[broaderZeSubPropertyOff: (?a rdfs:subPropertyOf ?b), (?b rdf:type skos:Concept) -> (?a skos:broader ?b)]
+[broaderZeSubClassOff: (?a rdfs:subClassOf ?b), (?b rdf:type skos:Concept), notEqual(?a, ?b) -> (?a skos:broader ?b)]
+[broaderZeSubPropertyOff: (?a rdfs:subPropertyOf ?b), (?b rdf:type skos:Concept), notEqual(?a, ?b) -> (?a skos:broader ?b)]
+[broaderZOntologickehoTypu: (?a rdf:type z-sgov-pojem:typ-proměnného-prvku) -> (?a skos:broader z-sgov-pojem:typ-proměnného-prvku)]
 
 [typZPodtridy1: (?a rdfs:subClassOf z-sgov-pojem:proměnný-prvek) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-proměnného-prvku)]
 [typZPodtridy2: (?a rdfs:subClassOf z-sgov-pojem:neměnný-prvek) (?a rdf:type skos:Concept) -> (?a rdf:type z-sgov-pojem:typ-neměnného-prvku)]
