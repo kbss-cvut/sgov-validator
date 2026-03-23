@@ -44,7 +44,7 @@ jar {
     archiveFileName = 'sgov-validator-' + new Date().format('yyyyMMddHHmmss') + '.jar'
 }
 
-ext.genOutputDir = file("$layout.buildDirectory/generated-resources")
+ext.genOutputDir = file(layout.buildDirectory.dir("generated-resources"))
 
 task generateZSGoVUFOMapping(type: Download) {
     src 'https://raw.githubusercontent.com/datagov-cz/ssp/master/content/vocabularies/z-sgov/z-sgov-mapov%C3%A1n%C3%AD-ufo.ttl'
